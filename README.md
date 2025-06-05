@@ -1,4 +1,6 @@
-# Тестовое задание (PL/SQL / Oracle)
+# <p align="center"> ![image](https://github.com/user-attachments/assets/19eaae88-976f-492a-b9a1-d7668771a384) </p>
+
+# Тестовое задание (PL/SQL / Oracle) компании ЦФТ
 
 ## Общие требования
 
