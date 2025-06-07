@@ -17,4 +17,31 @@
 **Условие:**  
 Даны две строки. Необходимо на PL/SQL реализовать алгоритм, определяющий, являются ли эти строки анаграммами (то есть, состоят ли они из одинакового набора символов).
 
+``` sql
+CREATE OR REPLACE FUNCTION sort_string(str VARCHAR2) RETURN VARCHAR2 IS
+    v_sorted VARCHAR2(4000);
+BEGIN
+    SELECT LISTAGG(SUBSTR(str, LEVEL, 1), '') WITHIN GROUP (ORDER BY SUBSTR(str, LEVEL, 1))
+    INTO v_sorted
+    FROM dual
+    CONNECT BY LEVEL <= LENGTH(str);
+    RETURN v_sorted;
+END;
+/
+
+CREATE OR REPLACE FUNCTION is_anagram(str1 VARCHAR2, str2 VARCHAR2) RETURN VARCHAR2 IS
+BEGIN
+    IF LENGTH(str1) != LENGTH(str2) THEN
+        RETURN 'NO';
+    ELSIF sort_string(LOWER(str1)) = sort_string(LOWER(str2)) THEN
+        RETURN 'YES';
+    ELSE
+        RETURN 'NO';
+    END IF;
+END;
+/
+
+SELECT is_anagram('test','test'); 
+SELECT is_anagram('test','test2');
+```
 
