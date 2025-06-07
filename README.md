@@ -185,10 +185,43 @@ CREATE TABLE Contracts (
     summ NUMBER                   
 );
 
-
 INSERT INTO contracts VALUES ('C1', TO_DATE('2023-01-01', 'YYYY-MM-DD'), NULL, 'MM', 100);
 INSERT INTO contracts VALUES ('C2', TO_DATE('2023-01-01', 'YYYY-MM-DD'), NULL, 'QQ', 300);
 INSERT INTO contracts VALUES ('C3', TO_DATE('2023-01-01', 'YYYY-MM-DD'), NULL, 'YY', 1200);
 
+WITH months AS (
+  SELECT LEVEL AS month_num,
+         TO_DATE('2024-' || LPAD(LEVEL, 2, '0') || '-01', 'YYYY-MM-DD') AS first_day
+    FROM dual CONNECT BY LEVEL <= 12
+),
+cte AS (
+  SELECT c.id, c.period_type, m.month_num,
+         CASE 
+           WHEN c.period_type = 'MM' THEN c.summ
+           WHEN c.period_type = 'QQ' AND m.month_num IN (1,4,7,10) THEN c.summ
+           WHEN c.period_type = 'YY' AND m.month_num = 1 THEN c.summ
+         END AS charge
+    FROM contracts c
+    CROSS JOIN months m
+    WHERE m.first_day BETWEEN c.date_beg AND NVL(c.date_end, LAST_DAY(TO_DATE('2024-12-01','YYYY-MM-DD')))
+)
+SELECT id,
+       period_type,
+       '2024' AS year,
+       SUM(CASE WHEN month_num = 1 THEN charge ELSE 0 END) AS jan,
+       SUM(CASE WHEN month_num = 2 THEN charge ELSE 0 END) AS feb,
+       SUM(CASE WHEN month_num = 3 THEN charge ELSE 0 END) AS mar,
+       SUM(CASE WHEN month_num = 4 THEN charge ELSE 0 END) AS apr,
+       SUM(CASE WHEN month_num = 5 THEN charge ELSE 0 END) AS may,
+       SUM(CASE WHEN month_num = 6 THEN charge ELSE 0 END) AS jun,
+       SUM(CASE WHEN month_num = 7 THEN charge ELSE 0 END) AS jul,
+       SUM(CASE WHEN month_num = 8 THEN charge ELSE 0 END) AS aug,
+       SUM(CASE WHEN month_num = 9 THEN charge ELSE 0 END) AS sep,
+       SUM(CASE WHEN month_num = 10 THEN charge ELSE 0 END) AS oct,
+       SUM(CASE WHEN month_num = 11 THEN charge ELSE 0 END) AS nov,
+       SUM(CASE WHEN month_num = 12 THEN charge ELSE 0 END) AS dec
+FROM cte
+GROUP BY id, period_type
+ORDER BY id;
 ```
 
