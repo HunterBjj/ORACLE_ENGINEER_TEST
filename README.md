@@ -124,13 +124,13 @@ SELECT * FROM (
     d.deliver_name AS supplier_name,
     s.service_name,
     SUM(t.turn) AS total_turn,
-    ROW_NUMBER() OVER (PARTITION BY d.id_deliver ORDER BY SUM(t.turn) DESC) AS rn
+    ROW_NUMBER() OVER (PARTITION BY d.id_deliver ORDER BY SUM(t.turn) DESC) AS row_number
   FROM delivers d
   JOIN services s ON d.id_deliver = s.deliver
   JOIN turns t ON s.id_service = t.service
   GROUP BY d.id_deliver, d.deliver_name, s.service_name
 )
-WHERE rn <= 3
+WHERE row_number <= 3
 ORDER BY supplier_name, total_turn DESC;
 ```
 
