@@ -7,7 +7,7 @@
 При выполнении заданий:
 
 1. **Указать версию Oracle**, которую вы используете:
-   https://onecompiler.com/plsql/
+   https://onecompiler.com/plsql/    Oracle PL/SQL, работающий на версии 23c (23.3.0.0).
 3. **Приложить скрипты для заполнения таблиц** с тестовыми данными.
 4. Если вы принимаете решение **наложить ограничения на условия задачи**, обязательно **укажите причину**, по которой вы приняли это решение.
 
@@ -42,8 +42,8 @@ BEGIN
 END;
 /
 
-SELECT is_anagram('test','test'); 
-SELECT is_anagram('test','test2');
+SELECT is_anagram('test', 'test'); 
+SELECT is_anagram('test', 'test2');
 ```
 
 ---
