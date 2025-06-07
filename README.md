@@ -119,9 +119,9 @@ INSERT INTO turns VALUES (5, 5, 300);
 INSERT INTO turns VALUES (6, 6, 600);
 INSERT INTO turns VALUES (7, 7, 700);
 
-SELECT * FROM (
+SELECT deliver_name, service_name, total_turn FROM (
   SELECT 
-    d.deliver_name AS supplier_name,
+    d.deliver_name,
     s.service_name,
     SUM(t.turn) AS total_turn,
     ROW_NUMBER() OVER (PARTITION BY d.id_deliver ORDER BY SUM(t.turn) DESC) AS row_number
@@ -131,7 +131,7 @@ SELECT * FROM (
   GROUP BY d.id_deliver, d.deliver_name, s.service_name
 )
 WHERE row_number <= 3
-ORDER BY supplier_name, total_turn DESC;
+ORDER BY deliver_name, total_turn DESC;
 ```
 
 ---
